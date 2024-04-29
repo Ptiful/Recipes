@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 import re
+import json
 
 #import Hello Fresh root url
 root_url = "https://www.hellofresh.be"
@@ -33,7 +34,7 @@ print("----- Getting all country recipe page done -----")
 print("----- Getting all urls for cooking recipies from all countries -----")
 recipies_url_not_parsed = []
 for element in not_nested_liste:
-    recipies_url_not_parsed.append(root_url + element)
+    recipies_url_not_parsed.append(root_url + element + "/?locale=fr-BE")
 
 for url in recipies_url_not_parsed:
     r = requests.get(url).text
@@ -41,11 +42,40 @@ for url in recipies_url_not_parsed:
     for a in soup.find_all("a", href=True):
         if a.text:
             links_with_text.append(a["href"])
+
 recipies_url = []
 recipies_url.append([i for i in links_with_text if re.search('\d+$', i)])
-print(recipies_url)
 print("----- Getting all urls for cooking recipies from all countries done -----")
 
+#Getting all recipies name
+print("----- Getting recipies name -----")
+recipies_name =[]
+for url in recipies_url[0]:
+    url = url.split("/recipes/")[-1]
+    url = re.sub('[^a-zA-Z-]+', '', url)
+    url = url.rstrip("-")
+    recipies_name.append(url)
+print("----- Done getting recipies name -----")
 
+#Getting all recipies's ingredients
 print("----- Taking care of ingredients ------")
+recipies_dictionnary = {}
+for url, name in zip(recipies_url[0], recipies_name):
+    r = requests.get(url).text
+    soup = BeautifulSoup(r,features="html.parser")
+    ingredients = []
+    ingredient = soup.find_all("p", {"class" : "sc-9394dad-0 eERBYk"})
+    for element in ingredient:
+        ingredients.append(element.get_text(strip=True))
+    quantities = []
+    quantity = soup.find_all("p", {"class" : "sc-9394dad-0 cJeggo"})
+    for element in quantity :
+        quantities.append(element.get_text(strip=True))
+
+    recipe_dict = {ingredient: qty for ingredient, qty in zip(ingredients, quantities)}
+    recipies_dictionnary[name] = recipe_dict
+
 print("----- Taking care of ingredients done ------")
+
+with open("test.csv", "w") as f:
+    json.dump(recipies_dictionnary,f)
