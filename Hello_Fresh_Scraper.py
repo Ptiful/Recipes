@@ -57,10 +57,15 @@ for url in recipies_url[0]:
     recipies_name.append(url)
 print("----- Done getting recipies name -----")
 
-#Getting all recipies's ingredients
-print("----- Taking care of ingredients ------")
-recipies_dictionnary = {}
-for url, name in zip(recipies_url[0], recipies_name):
+#Adding porper language to web page
+proper_link = []
+for link in recipies_url[0]:
+    proper_link.append(link + "/?locale=fr-BE")
+
+# #Getting all recipies's ingredients, quantity, instructions
+print("----- Taking care of ingredients, quantity, instructions ------")
+recipes_dictionnary = {}
+for url, name in zip(proper_link, recipies_name):
     r = requests.get(url).text
     soup = BeautifulSoup(r,features="html.parser")
     ingredients = []
@@ -73,9 +78,23 @@ for url, name in zip(recipies_url[0], recipies_name):
         quantities.append(element.get_text(strip=True))
 
     recipe_dict = {ingredient: qty for ingredient, qty in zip(ingredients, quantities)}
-    recipies_dictionnary[name] = recipe_dict
+    recipes_instructions = []
+    instruction = soup.find_all("div", {"class" : "sc-9394dad-0 iYWTFs"})
+    for element in instruction:
+            recipes_instructions.append(element.get_text(strip=True))
+    
+    recipes_dictionnary[name] = {"ingredients": recipe_dict, "instructions": recipes_instructions}
 
-print("----- Taking care of ingredients done ------")
+    # recipe_dict = {ingredient: qty for ingredient, qty in zip(ingredients, quantities)}
+    # recipies_dictionnary[name] = recipe_dict
+
+print("----- Taking care of ingredients, quantity, instructions done ------")
 
 with open("test.csv", "w") as f:
-    json.dump(recipies_dictionnary,f)
+    json.dump(recipes_dictionnary,f)
+
+#Rajouter MongoDB
+#Rajouter Typesense
+#Faire des fonctions
+#MapPool
+#Bar de progression
