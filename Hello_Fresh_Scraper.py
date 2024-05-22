@@ -90,7 +90,7 @@ for url, name in zip(proper_link, recipies_name):
 
 print("----- Taking care of ingredients, quantity, instructions done ------")
 
-with open("test.csv", "w") as f:
+with open("recipes.csv", "w") as f:
     json.dump(recipes_dictionnary,f)
 
 #Rajouter MongoDB
