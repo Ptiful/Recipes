@@ -1,5 +1,7 @@
 from src import Hello_Fresh_Scraper
 from src.Hello_Fresh_Scraper import root_url
+import pymongo
+
 
 def main():
     soup = Hello_Fresh_Scraper.fetch_soup()
@@ -14,7 +16,13 @@ def main():
     recipes_name =  Hello_Fresh_Scraper.getting_all_recipes_name(recipes_from_contries)
     french_recipes =  Hello_Fresh_Scraper.adding_french(recipes_from_contries)
     recipes_dict =  Hello_Fresh_Scraper.get_recipes_ingredients_quantity_instructions(french_recipes, recipes_name)
-    Hello_Fresh_Scraper.save_to_file(recipes_dict)
+    # Hello_Fresh_Scraper.save_to_file(recipes_dict)
+    
+    client = pymongo.MongoClient("mongodb://localhost:27017")
+    db = client["recipes_database"]
+    collection = db["recipes_collection"]
+    recipes = recipes_dict
+    collection.insert_one(recipes)
 
 if __name__ == "__main__":
     main()
