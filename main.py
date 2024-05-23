@@ -1,5 +1,5 @@
-import Hello_Fresh_Scraper
-from Hello_Fresh_Scraper import root_url
+from src import Hello_Fresh_Scraper
+from src.Hello_Fresh_Scraper import root_url
 
 def main():
     soup = Hello_Fresh_Scraper.fetch_soup()

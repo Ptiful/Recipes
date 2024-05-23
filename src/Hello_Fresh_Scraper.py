@@ -75,6 +75,7 @@ def adding_french(recipes_url:List[str]) ->List[str]:
 
 
 def fetch_recipe_details(args: Tuple[str, str]) -> Tuple[str, Dict[str, Union[Dict[str, str], List[str]]]]:
+    #Collecting all ingredients, quantities and instructions to a dictionnary
     url, name = args
     r = requests.get(url).text
     soup = BeautifulSoup(r, features="html.parser")
@@ -100,22 +101,17 @@ def fetch_recipe_details(args: Tuple[str, str]) -> Tuple[str, Dict[str, Union[Di
 
 
 def get_recipes_ingredients_quantity_instructions(proper_link:List[str], recipies_name:List[str]) ->Dict:
-    print("----- Taking care of ingredients, quantity, instructions ------")
+    #Adding all ingredients, quantities and instructions to a dictionnary
     recipes_dictionnary = {}
 
     with Pool(cpu_count()) as p:
         for name, details in tqdm(p.imap(fetch_recipe_details, zip(proper_link, recipies_name)), total=len(recipies_name), desc="Fetching recipes details"):
             recipes_dictionnary[name] = details
 
-    print("----- Taking care of ingredients, quantity, instructions done ------")
     return recipes_dictionnary
 
 
 def save_to_file(data, filename="recipes.json"):
-    """Save the recipes dictionary to a JSON file."""
+    #Save the recipes dictionary to a JSON file
     with open(filename, "w") as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
-
-
-#Need to refactor
-#Typesense ?
