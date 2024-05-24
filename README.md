@@ -1,13 +1,12 @@
 # Recipes
 
 This tool, for now, only collects all recipes from [Hello Fresh](https://www.hellofresh.be/) website.
-It will be design so you input the ingredients you want to eat today and it will sort out all Hello Fresh recipes.
+It will be designed for  you to input the ingredients you want to eat today and it will sort out all the possible Hello Fresh recipes.
 
 ## Tools needed
 
 [MongoDB](https://www.mongodb.com/docs/manual/installation/) up and running  
-[Python](https://www.python.org/downloads/)  
-[Visual Studio Code](https://code.visualstudio.com/download)
+[Python 3.11](https://www.python.org/downloads/)  
 
 ## How to run it on first time or if you want to update the database
 
@@ -27,6 +26,6 @@ And finally run :
 
 Need to refactor  
 Typesense ?  
-Connection to MongoDb automatic ?  
+Automatic connection to MongoDb ?  
 Docker ?  
 API ?  
