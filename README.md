@@ -17,8 +17,10 @@ Then run :
 
 ### How to run it second time to select your meal
 
-Open queries.py, input what you want to eat in line 11.  
-Ex : ["Rigatoni"]  
+Open queries.py, input what you want to eat in line 15.  
+```desired_ingredients = ['Oignon']```  
+Or if you know the name of the recipe, juste change ```recipe_name = "Carbonara"``` line 16 and replace line 15 by ```desired_ingredients = None```
+
 And finally run : 
 ```python3 queries.py```
 
